@@ -580,8 +580,8 @@
 
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <div class="container">
-            <p class="mb-0">Sistem Laporan Keuangan MTS Miftahul Huda Palang &copy; 2024</p>
-            <small>Dikembangkan untuk transparansi dan akuntabilitas keuangan sekolah @Powered by Arif Wibowo</small>
+            <p class="mb-0">Sistem Laporan Keuangan MTS Miftahul Huda Palang &copy; 2025</p>
+            <small>Dikembangkan untuk transparansi dan akuntabilitas keuangan sekolah copy; Powered by Arif Wibowo</small>
         </div>
     </footer>
 
