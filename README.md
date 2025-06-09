@@ -1197,7 +1197,7 @@
             const password = document.getElementById('password').value;
             
             // Ganti dengan kredensial yang lebih aman
-            if (username === 'admin' && password === 'admin123') {
+            if (username === 'admin' && password === 'aishwa') {
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('dashboardSection').style.display = 'block';
                 
