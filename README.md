@@ -211,7 +211,7 @@
                 </div>
                 <div>
                     <h1>MTS Miftahul Huda Palang</h1>
-                    <h3>Sistem Laporan Keuangan Sekolah</h3>
+                    <h3>Sistem Laporan Keuangan Madrasah</h3>
                 </div>
             </div>
         </div>
