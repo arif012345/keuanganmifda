@@ -275,7 +275,8 @@
                             <select class="form-select" id="kategori" required>
                                 <option value="SPP">SPP</option>
                                 <option value="Dana Bos">Dana BOS</option>
-                                <option value="Donasi">Donasi</option>
+                                <option value="Sisa">Sisa Tahun Lalu</option>
+                                <option value="Hutang">Hutang Tahun Lalu</option>
                                 <option value="Gaji">Gaji Guru & Staf</option>
                                 <option value="Peralatan">Peralatan Sekolah</option>
                                 <option value="Bangunan">Pemeliharaan Bangunan</option>
