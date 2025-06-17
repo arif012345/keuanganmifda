@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -161,6 +162,14 @@
             font-weight: 600;
         }
         
+        .search-bar {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.5rem;
@@ -210,7 +219,7 @@
                 </div>
                 <div>
                     <h1>MTS Miftahul Huda Palang</h1>
-                    <h3>Sistem Laporan Keuangan Madrasah</h3>
+                    <h3>Sistem Laporan Keuangan Sekolah</h3>
                 </div>
             </div>
         </div>
@@ -275,8 +284,7 @@
                             <select class="form-select" id="kategori" required>
                                 <option value="SPP">SPP</option>
                                 <option value="Dana Bos">Dana BOS</option>
-                                <option value="Sisa">Sisa Tahun Lalu</option>
-                                <option value="Hutang">Hutang Tahun Lalu</option>
+                                <option value="Donasi">Donasi</option>
                                 <option value="Gaji">Gaji Guru & Staf</option>
                                 <option value="Peralatan">Peralatan Sekolah</option>
                                 <option value="Bangunan">Pemeliharaan Bangunan</option>
@@ -299,7 +307,16 @@
                     <h4><i class="bi bi-wallet2 me-2"></i>Saldo Akhir: <span id="saldoAkhir">Rp 0</span></h4>
                 </div>
 
-                <h3><i class="bi bi-clock-history me-2"></i>Transaksi Terakhir</h3>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="bi bi-clock-history me-2"></i>Transaksi Terakhir</h3>
+                    <div class="search-bar">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Cari transaksi...">
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="table-container">
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
@@ -403,6 +420,9 @@
                         <button id="downloadLaporan" class="btn btn-success btn-download me-2">
                             <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
                         </button>
+                        <button id="downloadLaporanExcel" class="btn btn-success btn-download me-2">
+                            <i class="bi bi-file-earmark-excel me-1"></i>Download Excel
+                        </button>
                         <button id="printLaporan" class="btn btn-info btn-download">
                             <i class="bi bi-printer me-1"></i>Print
                         </button>
@@ -450,9 +470,14 @@
             <div class="tab-pane fade" id="rekap" role="tabpanel">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                     <h3><i class="bi bi-clipboard-data me-2"></i>Rekapitulasi Keuangan</h3>
-                    <button id="downloadRekap" class="btn btn-success btn-download">
-                        <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
-                    </button>
+                    <div>
+                        <button id="downloadRekap" class="btn btn-success btn-download me-2">
+                            <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
+                        </button>
+                        <button id="downloadRekapExcel" class="btn btn-success btn-download">
+                            <i class="bi bi-file-earmark-excel me-1"></i>Download Excel
+                        </button>
+                    </div>
                 </div>
 
                 <div id="rekapContent">
@@ -580,8 +605,8 @@
 
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <div class="container">
-            <p class="mb-0">Sistem Laporan Keuangan MTS Miftahul Huda Palang &copy; 2025</p>
-            <small>Dikembangkan untuk transparansi dan akuntabilitas keuangan sekolah &copy; Powered by Arif Wibowo</small>
+            <p class="mb-0">Sistem Laporan Keuangan MTS Miftahul Huda Palang &copy; 2024</p>
+            <small>Dikembangkan untuk transparansi dan akuntabilitas keuangan sekolah @Powered by Arif Wibowo</small>
         </div>
     </footer>
 
@@ -606,6 +631,58 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="button" class="btn btn-primary" id="confirmRestore">Restore Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk Edit Transaksi -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Edit Transaksi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editId">
+                        <div class="mb-3">
+                            <label for="editTanggal" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="editTanggal" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editJenis" class="form-label">Jenis</label>
+                            <select class="form-select" id="editJenis" required>
+                                <option value="masuk">Pemasukan</option>
+                                <option value="keluar">Pengeluaran</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editJumlah" class="form-label">Jumlah (Rp)</label>
+                            <input type="number" class="form-control" id="editJumlah" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editKategori" class="form-label">Kategori</label>
+                            <select class="form-select" id="editKategori" required>
+                                <option value="SPP">SPP</option>
+                                <option value="Dana Bos">Dana BOS</option>
+                                <option value="Donasi">Donasi</option>
+                                <option value="Gaji">Gaji Guru & Staf</option>
+                                <option value="Peralatan">Peralatan Sekolah</option>
+                                <option value="Bangunan">Pemeliharaan Bangunan</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editKeterangan" class="form-label">Keterangan</label>
+                            <input type="text" class="form-control" id="editKeterangan" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="saveEdit">Simpan Perubahan</button>
                 </div>
             </div>
         </div>
@@ -658,12 +735,26 @@
         }
 
         // Fungsi untuk menampilkan transaksi di tabel
-        function renderTransactions() {
+        function renderTransactions(searchTerm = '') {
             const tbody = document.getElementById('transaksiTableBody');
             tbody.innerHTML = '';
             
-            // Ambil 10 transaksi terakhir (urut berdasarkan tanggal descending)
-            const sortedTransactions = [...transactions].sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+            // Ambil transaksi terakhir (urut berdasarkan tanggal descending)
+            let sortedTransactions = [...transactions].sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+            
+            // Filter berdasarkan search term
+            if (searchTerm) {
+                searchTerm = searchTerm.toLowerCase();
+                sortedTransactions = sortedTransactions.filter(trans => 
+                    trans.tanggal.toLowerCase().includes(searchTerm) ||
+                    trans.jenis.toLowerCase().includes(searchTerm) ||
+                    trans.kategori.toLowerCase().includes(searchTerm) ||
+                    trans.keterangan.toLowerCase().includes(searchTerm) ||
+                    formatRupiah(trans.jumlah).toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Ambil 10 transaksi teratas
             const recentTransactions = sortedTransactions.slice(0, 10);
             
             recentTransactions.forEach((trans, index) => {
@@ -676,6 +767,9 @@
                     <td>${formatRupiah(trans.jumlah)}</td>
                     <td>${trans.keterangan}</td>
                     <td>
+                        <button class="btn btn-sm btn-warning me-1" onclick="openEditModal(${trans.id})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
                         <button class="btn btn-sm btn-danger" onclick="deleteTransaction(${trans.id})">
                             <i class="bi bi-trash"></i>
                         </button>
@@ -1108,6 +1202,63 @@
             }
         }
 
+        // Fungsi untuk membuka modal edit transaksi
+        function openEditModal(id) {
+            const transaction = transactions.find(t => t.id === id);
+            if (!transaction) return;
+            
+            document.getElementById('editId').value = transaction.id;
+            document.getElementById('editTanggal').value = transaction.tanggal;
+            document.getElementById('editJenis').value = transaction.jenis;
+            document.getElementById('editJumlah').value = transaction.jumlah;
+            document.getElementById('editKategori').value = transaction.kategori;
+            document.getElementById('editKeterangan').value = transaction.keterangan;
+            
+            const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.show();
+        }
+
+        // Fungsi untuk menyimpan perubahan transaksi
+        function saveEdit() {
+            const id = parseInt(document.getElementById('editId').value);
+            const tanggal = document.getElementById('editTanggal').value;
+            const jenis = document.getElementById('editJenis').value;
+            const jumlah = parseInt(document.getElementById('editJumlah').value);
+            const kategori = document.getElementById('editKategori').value;
+            const keterangan = document.getElementById('editKeterangan').value;
+            
+            // Validasi jumlah
+            if (isNaN(jumlah) || jumlah <= 0) {
+                alert("Jumlah harus angka positif");
+                return;
+            }
+            
+            // Temukan indeks transaksi
+            const index = transactions.findIndex(t => t.id === id);
+            if (index === -1) return;
+            
+            // Update transaksi
+            transactions[index] = {
+                id,
+                tanggal,
+                jenis,
+                kategori,
+                jumlah,
+                keterangan
+            };
+            
+            saveTransactions(); // Simpan ke localStorage
+            
+            // Render ulang
+            renderTransactions(document.getElementById('searchInput').value);
+            renderLaporan();
+            renderRekap();
+            
+            // Tutup modal
+            bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+            alert('Transaksi berhasil diperbarui!');
+        }
+
         // Fungsi untuk download PDF dengan sisa saldo
         function downloadPDF(contentId, filename) {
             const { jsPDF } = window.jspdf;
@@ -1177,6 +1328,15 @@
             alert('Data berhasil diekspor ke CSV!');
         }
         
+        // Fungsi untuk export ke Excel
+        function exportToExcel(contentId, filename) {
+            const table = document.getElementById(contentId).querySelector('table');
+            const ws = XLSX.utils.table_to_sheet(table);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Laporan");
+            XLSX.writeFile(wb, filename);
+        }
+        
         // Fungsi untuk export ke Google Sheets
         function exportToGoogleSheets() {
             // Dalam implementasi nyata, ini akan mengintegrasikan dengan API Google Sheets
@@ -1223,16 +1383,29 @@
                 renderLaporan();
             });
             
+            // Tambahkan event listener untuk pencarian
+            document.getElementById('searchInput').addEventListener('input', function() {
+                renderTransactions(this.value);
+            });
+            
             document.getElementById('downloadLaporan').addEventListener('click', function() {
                 downloadPDF('laporanContent', 'Laporan_Keuangan_MTS_Miftahul_Huda_Palang.pdf');
             });
             
-            document.getElementById('printLaporan').addEventListener('click', function() {
-                window.print();
+            document.getElementById('downloadLaporanExcel').addEventListener('click', function() {
+                exportToExcel('laporanContent', 'Laporan_Keuangan_MTS_Miftahul_Huda_Palang.xlsx');
             });
             
             document.getElementById('downloadRekap').addEventListener('click', function() {
                 downloadPDF('rekapContent', 'Rekap_Keuangan_MTS_Miftahul_Huda_Palang.pdf');
+            });
+            
+            document.getElementById('downloadRekapExcel').addEventListener('click', function() {
+                exportToExcel('rekapContent', 'Rekap_Keuangan_MTS_Miftahul_Huda_Palang.xlsx');
+            });
+            
+            document.getElementById('printLaporan').addEventListener('click', function() {
+                window.print();
             });
             
             document.getElementById('backupData').addEventListener('click', backupData);
@@ -1270,6 +1443,9 @@
                 
                 reader.readAsText(file);
             });
+
+            // Event listener untuk menyimpan edit transaksi
+            document.getElementById('saveEdit').addEventListener('click', saveEdit);
 
             // Set tanggal default ke hari ini
             document.getElementById('tanggal').valueAsDate = new Date();
