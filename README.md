@@ -219,7 +219,7 @@
                 </div>
                 <div>
                     <h1>MTS Miftahul Huda Palang</h1>
-                    <h3>Sistem Laporan Keuangan Sekolah</h3>
+                    <h3>Sistem Laporan Keuangan Madrasah</h3>
                 </div>
             </div>
         </div>
@@ -289,7 +289,7 @@
                                 <option value="Ujian">Ujian</option>
                                 <option value="Konsumsi">Konsumsi</option>
                                 <option value="Prestasi">Prestasi</option>
-                                <option value="Peralatan">Peralatan Sekolah</option>
+                                <option value="Peralatan">Peralatan Madrasah</option>
                                 <option value="Sarpras">Sarpras</option>
                                 <option value="Kompetensi">Kompetensi Guru/Tendik</option>
                                 <option value="Pengadaan">Pengadaan Buku</option>
@@ -676,7 +676,7 @@
                                 <option value="Dana Bos">Dana BOS</option>
                                 <option value="Donasi">Donasi</option>
                                 <option value="Gaji">Gaji Guru & Staf</option>
-                                <option value="Peralatan">Peralatan Sekolah</option>
+                                <option value="Peralatan">Peralatan Madrasah</option>
                                 <option value="Bangunan">Pemeliharaan Bangunan</option>
                                 <option value="Lainnya">Lainnya</option>
                             </select>
