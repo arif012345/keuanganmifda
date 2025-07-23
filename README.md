@@ -294,7 +294,6 @@
                                 <option value="Kompetensi">Kompetensi Guru/Tendik</option>
                                 <option value="Pengadaan">Pengadaan Buku</option>
                                 <option value="Pengembangan">Pengembangan Kurikulum</option>
-                                <option value="Pengadaan">Pengadaan Buku</option>
                                 <option value="Lainnya">Lainnya</option>
                             </select>
                         </div>
