@@ -282,7 +282,6 @@
                         <div class="col-md-3">
                             <label for="kategori" class="form-label">Kategori</label>
                             <select class="form-select" id="kategori" required>
-                                <option value="SPP">SPP</option>
                                 <option value="Dana Bos">Dana BOS</option>
                                 <option value="Infaq">Infaq</option>
                                 <option value="Donasi">Donasi</option>
