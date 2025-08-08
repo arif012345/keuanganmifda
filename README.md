@@ -671,12 +671,18 @@
                         <div class="mb-3">
                             <label for="editKategori" class="form-label">Kategori</label>
                             <select class="form-select" id="editKategori" required>
-                                <option value="SPP">SPP</option>
                                 <option value="Dana Bos">Dana BOS</option>
+                                <option value="Infaq">Infaq</option>
                                 <option value="Donasi">Donasi</option>
                                 <option value="Gaji">Gaji Guru & Staf</option>
+                                <option value="Ujian">Ujian</option>
+                                <option value="Konsumsi">Konsumsi</option>
+                                <option value="Prestasi">Prestasi</option>
                                 <option value="Peralatan">Peralatan Madrasah</option>
-                                <option value="Bangunan">Pemeliharaan Bangunan</option>
+                                <option value="Sarpras">Sarpras</option>
+                                <option value="Kompetensi">Kompetensi Guru/Tendik</option>
+                                <option value="Pengadaan">Pengadaan Buku</option>
+                                <option value="Pengembangan">Pengembangan Kurikulum</option>
                                 <option value="Lainnya">Lainnya</option>
                             </select>
                         </div>
